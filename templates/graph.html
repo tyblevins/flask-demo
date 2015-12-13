@@ -1,22 +1,14 @@
 <!doctype html>
 <html>
-<head>
- <title>Closing prices for {{ticker}}</title>
- <link rel="stylesheet" href="http://cdn.pydata.org/bokeh-0.7.1.min.css" type="text/css" />
- <script type="text/javascript" src="http://cdn.pydata.org/bokeh-0.7.1.min.js"></script>
- {{ figJS|safe }}
-</head>
-<body>
-<div class="rawData">
- <p>
- Data Points:<br>
- {% for i in y %}
- {{ i }},
- {% endfor %}
- </p>
-</div>
-<div class='bokeh'>
- {{ figDiv|safe }}
-</div>
-</body>
+ <head>
+  <title>Figure examples</title>
+  <link rel="stylesheet" href="http://cdn.pydata.org/bokeh/release/bokeh-0.10.0.min.css" type="text/css" />
+  <script type="text/javascript" src="http://cdn.pydata.org/bokeh/release/bokeh-0.9.0.min.js"></script>
+  {{ script|safe }}
+ </head>
+ <body>
+  <div class='bokeh'>
+   {{ div|safe }}
+  </div>
+ </body>
 </html>

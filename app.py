@@ -4,9 +4,10 @@ import requests
 import simplejson as json
 
 # imports for Bokeh plotting
+from bokeh.embed import components
 from bokeh.plotting import figure
-from bokeh.resources import CDN
-from bokeh.embed import file_html, components
+from bokeh.resources import INLINE
+from bokeh.util.string import encode_utf8
 
 app = Flask(__name__)
 
@@ -31,18 +32,11 @@ def index():
         x = df['Date'][0:22]
         y = df['Close'][0:22]
 
-        # generate Bokeh HTML elements
-        # create a `figure` object
-        p = figure(title=app.vars['ticker'], plot_width=500,plot_height=400)
-        # add the line
-        p.line(x,y)
-        # add axis labels
-        p.xaxis.axis_label = "time"
-        p.yaxis.axis_label = "price"
-        # create the HTML elements to pass to template
-        figJS,figDiv = components(p,CDN)
+        fig = figure(title=app.vars['ticker'])
+        fig.line(x,y)
+        script,div = components(fig)
+        return render_template('graph.html',div=div,script=script)
 
-        return render_template('graph.html',y=y, figJS=figJS,figDiv=figDiv,ticker=app.vars['ticker'])
 
 if __name__ == '__main__':
   app.run(port=33507,debug=True)

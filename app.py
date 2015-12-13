@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect
 import pandas as pd
 import requests
 import simplejson as json
+import time
+import datetime
 
 # imports for Bokeh plotting
 from bokeh.embed import components
@@ -30,13 +32,15 @@ def index():
         df = pd.DataFrame(data['dataset']['data'])
         df.columns = data['dataset']['column_names']
         x = df['Date'][0:22]
+        x = [datetime.datetime.strptime(day,'%Y-%m-%d').date() for day in x]
+        print x
         y = df['Close'][0:22]
 
-        fig = figure(title=app.vars['ticker'])
+        fig = figure(title=app.vars['ticker'],x_axis_type='datetime',x_axis_label ='Date', y_axis_label='Closing Price')
         fig.line(x,y)
         script,div = components(fig)
         return render_template('graph.html',div=div,script=script)
 
 
 if __name__ == '__main__':
-  app.run(port=33507,debug=True)
+  app.run(port=33507)

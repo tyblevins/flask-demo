@@ -1,6 +1,12 @@
 from flask import Flask, render_template, request, redirect
 import pandas as pd
 import requests
+import simplejson as json
+
+# imports for Bokeh plotting
+from bokeh.plotting import figure
+from bokeh.resources import CDN
+from bokeh.embed import file_html, components
 
 app = Flask(__name__)
 
@@ -27,8 +33,7 @@ def index():
 
         # generate Bokeh HTML elements
         # create a `figure` object
-        p = figure(title='A Bokeh plot',
-        plot_width=500,plot_height=400)
+        p = figure(title=app.vars['ticker'], plot_width=500,plot_height=400)
         # add the line
         p.line(x,y)
         # add axis labels
@@ -37,6 +42,7 @@ def index():
         # create the HTML elements to pass to template
         figJS,figDiv = components(p,CDN)
 
-        return render_template('graph.html',y=y, figJS=figJS,figDiv=figDiv,ticker=ticker)
+        return render_template('graph.html',y=y, figJS=figJS,figDiv=figDiv,ticker=app.vars['ticker'])
+
 if __name__ == '__main__':
-  app.run(port=33507)
+  app.run(port=33507,debug=True)

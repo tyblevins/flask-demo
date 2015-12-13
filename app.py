@@ -25,17 +25,19 @@ def index():
         return render_template('index.html')
     else:
         #request was a post
+        #ticker input
         app.vars['ticker'] = request.form['ticker']
+        #pull data from Quandl api
         api_link = 'https://www.quandl.com/api/v3/datasets/WIKI/%s.json?api_key=u6zoduyGLcrx-vMz5AMN' % (app.vars['ticker'])
         r = requests.get(api_link)
         data = json.loads(r.text)
+        #store in pandas data frame and extract past month of data
         df = pd.DataFrame(data['dataset']['data'])
         df.columns = data['dataset']['column_names']
         x = df['Date'][0:22]
         x = [datetime.datetime.strptime(day,'%Y-%m-%d').date() for day in x]
-        print x
         y = df['Close'][0:22]
-
+        #create bokeh figure and push to front end
         fig = figure(title=app.vars['ticker'],x_axis_type='datetime',x_axis_label ='Date', y_axis_label='Closing Price')
         fig.line(x,y)
         script,div = components(fig)
